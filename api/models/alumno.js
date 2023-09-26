@@ -7,7 +7,14 @@ module.exports = (sequelize, DataTypes) => {
     idCarrera: DataTypes.INTEGER
   }, {});
   alumno.associate = function(models) {
-    // associations can be defined here
+    // Asociaciones aca
+    alumno.belongsTo(models.carrera,  // Modelo al que pertenece
+    {
+      as: 'carrera',                 // nombre de mi relacion
+      foreignKey: 'idCarrera'       // campo con el que voy a igualar 
+    })
   };
+
+
   return alumno;
 };
