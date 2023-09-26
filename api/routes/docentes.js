@@ -6,7 +6,8 @@ router.get("/", (req, res) => {
   console.log("Esto es un mensaje para ver en consola");
   models.docente
     .findAll({
-      attributes: ["id", "nombre","apellido","idMateria","idCarrera"]
+      attributes: ["id", "nombre","apellido","idMateria","idCarrera"],
+      include:[{as:'Materia', model:models.materia, attributes: ["id","nombre"]}]
     })
     .then(docentes => res.send(docentes))
     .catch(() => res.sendStatus(500));

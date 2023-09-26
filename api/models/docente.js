@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     docente.belongsTo(models.materia),
     {
-      as: 'materia-que-dicta',
-      foreignKey: 'idMateria'
+      as: 'Materia',
+      foreignKey: 'id'
     }
   };
   return docente;
