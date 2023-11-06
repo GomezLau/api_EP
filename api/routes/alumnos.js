@@ -32,6 +32,7 @@ const findAlumno = (id, { onSuccess, onNotFound, onError }) => {
   models.alumno
     .findOne({
       attributes: ["id", "nombre","apellido","edad","idCarrera"],
+      include:[{as:'Carrera-Relacionada', model:models.carrera, attributes: ["id","nombre"]}],
       where: { id }
     })
     .then(alumno => (alumno ? onSuccess(alumno) : onNotFound()))
@@ -68,13 +69,16 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const onSuccess = alumno =>
-  alumno
-      .destroy()
-      .then(() => res.sendStatus(200))
-      .catch(() => res.sendStatus(500));
-  findAlumno(req.params.id, {
-    onSuccess,
+  findUser(req.params.id,{
+    onSuccess: alumno => {
+      alumno
+            .destroy()
+            .then(() => res.sendStatus(200))
+            .catch(error => {
+                console.error("Error al intentar eliminar al alumno: ${error}");
+                res.sendStatus(500);
+            });
+    },    
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   }); 

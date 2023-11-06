@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
       attributes: ["id", "nombre","id_carrera"],
       include:[
         {as:'Carrera-relacionada', model:models.carrera, attributes: ["id","nombre"]},
-        {as:'Docente', model:models.docente, attributes: ["id","nombre","apellido"]}
+        //{as:'Docente', model:models.docente, attributes: ["id","nombre","apellido"]}
       ]
     })
     .then(materias => res.send(materias))
@@ -71,13 +71,16 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const onSuccess = materia =>
-  materia
-      .destroy()
-      .then(() => res.sendStatus(200))
-      .catch(() => res.sendStatus(500));
-  findMateria(req.params.id, {
-    onSuccess,
+  findUser(req.params.id,{
+    onSuccess: materia => {
+      materia
+            .destroy()
+            .then(() => res.sendStatus(200))
+            .catch(error => {
+                console.error("Error al intentar eliminar la materia: ${error}");
+                res.sendStatus(500);
+            });
+    },    
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   }); 

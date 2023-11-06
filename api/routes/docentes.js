@@ -68,13 +68,16 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const onSuccess = docente =>
-  docente
-      .destroy()
-      .then(() => res.sendStatus(200))
-      .catch(() => res.sendStatus(500));
-  findDocente(req.params.id, {
-    onSuccess,
+  findUser(req.params.id,{
+    onSuccess: docente => {
+      docente
+            .destroy()
+            .then(() => res.sendStatus(200))
+            .catch(error => {
+                console.error("Error al intentar eliminar el/la docente: ${error}");
+                res.sendStatus(500);
+            });
+    },    
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   }); 

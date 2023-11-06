@@ -3,13 +3,12 @@ var router = express.Router();
 var models = require("../models");
 
 router.get("/", (req, res) => {
-  console.log("Esto es un mensaje para ver en consola");
+  //console.log("Esto es un mensaje para ver en consola");
   models.carrera
     .findAll({
       attributes: ["id", "nombre"],
       include:[
-        {as:'Materias', model:models.materia, attributes: ["id","nombre"]},
-        {as:'Alumno', model:models.alumno, attributes: ["id","nombre","apellido"]}
+        {as:'Alumnos-Relacionados', model:models.alumno, attributes: ["id","nombre","apellido"]}
       ]      
     })
     .then(carreras => res.send(carreras))
@@ -71,16 +70,19 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const onSuccess = carrera =>
-    carrera
-      .destroy()
-      .then(() => res.sendStatus(200))
-      .catch(() => res.sendStatus(500));
-  findCarrera(req.params.id, {
-    onSuccess,
+  findUser(req.params.id,{
+    onSuccess: carrera => {
+      carrera
+            .destroy()
+            .then(() => res.sendStatus(200))
+            .catch(error => {
+                console.error("Error al intentar eliminar la carrera: ${error}");
+                res.sendStatus(500);
+            });
+    },    
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
-  });
+  }); 
 });
 
 module.exports = router;

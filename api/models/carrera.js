@@ -7,18 +7,18 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   carrera.associate = function(models) {
   	//asociacion a carrera (pertenece a:)
-  	carrera.hasMany(models.alumno,// modelo al que pertenece
+ /* 	carrera.hasMany(models.alumno,// modelo al que pertenece
     {
-      as : 'Alumno',  // nombre de mi relacion
+      as : 'Alumnos-Relacionados',  // nombre de mi relacion
       foreignKey: 'id'     // campo con el que voy a igualar
     })
 
-    carrera.hasMany(models.materia,// modelo al que pertenece
+    carrera.hasMany(models.materia, // Modelo 
     {
-      as : 'Materias',  // nombre de mi relacion
+      as : 'Materias-Relacionadas',              // Nombre de la Relacion
       foreignKey: 'id_carrera'     // campo con el que voy a igualar
     })
-
+*/
   };
   return carrera;
 };

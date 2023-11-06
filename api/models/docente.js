@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     docente.belongsTo(models.materia),
     {
       as: 'Materia',
-      foreignKey: 'id'
+      foreignKey: 'idMateria'
     }
   };
   return docente;
