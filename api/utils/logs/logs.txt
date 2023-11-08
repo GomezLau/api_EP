@@ -1,0 +1,7 @@
+2023-11-07T18:20:27.342Z: Consulta exitosa a la lista de materias
+2023-11-07T18:26:41.976Z: Consulta exitosa a la lista de materias
+2023-11-07T18:53:42.043Z: Ocurrio un error al leer el archivo logs.txt : ${error.message}
+2023-11-07T23:27:58.882Z: Consulta exitosa a la lista de materias
+2023-11-07T23:28:04.920Z: Busqueda de materia exitosa
+2023-11-07T23:28:08.534Z: Busqueda de materia exitosa
+2023-11-07T23:28:12.966Z: No se encontro la materia
