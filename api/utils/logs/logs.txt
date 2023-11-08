@@ -5,3 +5,39 @@
 2023-11-07T23:28:04.920Z: Busqueda de materia exitosa
 2023-11-07T23:28:08.534Z: Busqueda de materia exitosa
 2023-11-07T23:28:12.966Z: No se encontro la materia
+2023-11-08T04:01:08.427Z: Lectura exitosa
+2023-11-08T19:26:57.979Z: Post exitoso en la lista de alumnos
+2023-11-08T19:51:22.253Z: Error al consultar las carreras: alumno is not associated to carrera!
+2023-11-08T19:51:24.910Z: Error al consultar las carreras: alumno is not associated to carrera!
+2023-11-08T19:54:00.646Z: Busqueda de carrera exitosa
+2023-11-08T19:56:04.425Z: Busqueda de carrera exitosa
+2023-11-08T19:56:12.096Z: Consulta exitosa a la lista de carreras
+2023-11-08T20:00:44.279Z: Consulta exitosa a la lista de alumnos
+2023-11-08T20:07:21.648Z: Post exitoso en la lista de alumnos
+2023-11-08T20:09:37.423Z: Post exitoso en la lista de alumnos
+2023-11-08T20:10:19.101Z: Post exitoso en la lista de alumnos
+2023-11-08T20:10:25.976Z: Post exitoso en la lista de alumnos
+2023-11-08T20:10:31.510Z: Post exitoso en la lista de alumnos
+2023-11-08T20:10:37.135Z: Post exitoso en la lista de alumnos
+2023-11-08T20:10:42.844Z: Post exitoso en la lista de alumnos
+2023-11-08T20:10:47.870Z: Post exitoso en la lista de alumnos
+2023-11-08T20:10:54.870Z: Post exitoso en la lista de alumnos
+2023-11-08T20:11:00.237Z: Post exitoso en la lista de alumnos
+2023-11-08T20:11:05.729Z: Post exitoso en la lista de alumnos
+2023-11-08T20:11:37.240Z: Post exitoso en la lista de alumnos
+2023-11-08T20:11:46.532Z: Post exitoso en la lista de alumnos
+2023-11-08T20:11:56.858Z: Post exitoso en la lista de alumnos
+2023-11-08T20:12:44.519Z: Alumno actualizado correctamente
+2023-11-08T20:17:13.976Z: Alumno actualizado correctamente
+2023-11-08T20:21:26.733Z: Consulta exitosa a la lista de alumnos
+2023-11-08T20:22:11.477Z: Consulta exitosa a la lista de alumnos
+2023-11-08T20:22:30.316Z: Consulta exitosa a la lista de alumnos
+2023-11-08T20:23:20.567Z: Consulta exitosa a la lista de alumnos
+2023-11-08T20:23:30.503Z: Consulta exitosa a la lista de alumnos
+2023-11-08T20:27:57.412Z: Lectura exitosa
+2023-11-08T20:28:26.117Z: Lectura exitosa
+2023-11-08T20:28:31.801Z: Lectura exitosa
+2023-11-08T20:28:35.393Z: Lectura exitosa
+2023-11-08T20:30:44.253Z: Post exitoso en la lista de carreras
+2023-11-08T20:31:09.858Z: Post exitoso en la lista de carreras
+2023-11-08T20:36:00.028Z: Post exitoso en la lista de carreras

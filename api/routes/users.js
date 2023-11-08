@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
+const authMiddleware = require("../utils/authMiddleware");
 
 router.get("/", (req, res) => {
   console.log("Esto es un mensaje para ver en consola");
@@ -92,7 +93,7 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
   findUser(req.params.id,{
     onSuccess: user => {
         user

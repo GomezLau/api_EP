@@ -2,22 +2,34 @@ var express = require("express");
 var router = express.Router();
 var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
-const authRoutes = require("../routes/authRoutes");
+const authMiddleware = require("../utils/authMiddleware");
 
 router.get("/", (req, res) => {
-  //console.log("Esto es un mensaje para ver en consola");
-
+  
+  //PAGINACION
+  const page = parseInt(req.query.page) || 1; // Número de página solicitada (por defecto: 1)
+  const pageSize = parseInt(req.query.pageSize) || 10; // Tamaño de la página solicitada (por defecto: 10)
+  const offset = (page - 1) * pageSize; // Calcular el índice de inicio para la paginación
+  
   models.materia
-    .findAll({
+    .findAndCountAll({
       attributes: ["id", "nombre","id_carrera"],
       include:[
         {as:'Carrera-relacionada', model:models.carrera, attributes: ["id","nombre"]},
-      ]
+      ],
+      limit: pageSize, // Limitar la cantidad de resultados por página
+      offset: offset // Saltar los resultados anteriores a la página actual
     })
     .then(materias => {
       //Log exitoso cuando se obtienen las materias
       logsUtils.guardarLog("Consulta exitosa a la lista de materias");
-      res.send(materias);
+      //res.send(materias);
+      res.json({
+        page: page,
+        pageSize: pageSize,
+        totalMaterias: materias.count,
+        materias: materias.rows
+      });
     })
     .catch(error => {
       logsUtils.guardarLog(`Error al consultar las materias: ${error.message}`);
@@ -26,9 +38,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
-
-
+router.post("/",authMiddleware.authenticateToken, (req, res) => {
   models.materia
     .create({ nombre: req.body.nombre, id_carrera: req.body.id_carrera })
     .then(materia => {
@@ -75,36 +85,43 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
-  const onSuccess = materia =>
-  materia
-      .update({ nombre: req.body.nombre, id_carrera:req.body.id_carrera }, { fields: ["nombre", "id_carrera"] })
-      .then(() => res.sendStatus(200))
-      .catch(error => {
-        if (error == "SequelizeUniqueConstraintError: Validation error") {
-          logsUtils.guardarLog(`Error de validacion al actualizar`),
-          res.status(400).send('Bad request: existe otra materia con el mismo nombre')
-        }
-        else {
-          logsUtils.guardarLog(`Error al intentar actualizar la base de datos: ${error}`)
-          console.log(`Error al intentar actualizar la base de datos: ${error}`)
-          res.sendStatus(500)
-        }
-      });
-      findMateria(req.params.id, {
-    onSuccess:() => logsUtils.guardarLog(`Materia actualziada correctamente`),
-    onNotFound: () => {
-      logsUtils.guardarLog(`Materia no encontrada`);
-      res.sendStatus(404)
-    },
-    onError: () => {
-      logsUtils.guardarLog(`Error al buscar la materia`);
-      res.sendStatus(500)
-    }
-  });
+router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
+  //Guardo el ID y los datos para la actualizacion
+  const materiaId = req.params.id;
+  const updatedMateria = {
+    nombre: req.body.nombre,
+    id_carrera: req.body.id_carrera
+  };
+
+  //Busco la materia por ID (Pk=Primary Key)
+  models.materia.findByPk(materiaId)
+    .then(materia => {
+      if (!materia) {
+        logsUtils.guardarLog(`Materia no encontrada`);
+        return res.sendStatus(404);
+      }
+
+      //Si encuentro la materia usa el metodo update para actualizar la materia con los datos de updatedMateria
+      return materia
+        .update(updatedMateria, { fields: ["nombre", "id_carrera"] })
+        .then(updatedMateria => {
+          logsUtils.guardarLog(`Materia actualizada correctamente`);
+          res.status(200).json(updatedMateria);
+        })
+        .catch(error => {
+          logsUtils.guardarLog(`Error al intentar actualizar la base de datos: ${error}`);
+          console.error(`Error al intentar actualizar la base de datos: ${error}`);
+          res.sendStatus(500);
+        });
+    })
+    .catch(error => {
+      logsUtils.guardarLog(`Error al buscar la materia: ${error}`);
+      console.error(`Error al buscar la materia: ${error}`);
+      res.sendStatus(500);
+    });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
   findMateria(req.params.id,{
     onSuccess: materia => {
       materia

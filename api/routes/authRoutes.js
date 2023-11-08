@@ -4,12 +4,13 @@ const authMiddleware = require("../utils/authMiddleware");
 
 
 
-router.post("/login", (req, res) => {
+router.post("/login", async(req, res) => {
   // Verificar credenciales de usuario, conseguir el usuario de la db
   const { username, password } = req.body;
-
-  if(authMiddleware.authenticateCredentials(username, password)) {
-        const token = authMiddleware.generateToken({ id: 1, username });
+  var credenciales = await authMiddleware.authenticateCredentials(username, password);
+  if(credenciales) {
+        console.log("entre")
+        const token = authMiddleware.generateToken({ id: 4, username });
         res.json({ token });
       }else{
         res.status(401).json({mensaje: "Credenciales incorrectas"});

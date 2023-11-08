@@ -2,20 +2,34 @@ var express = require("express");
 var router = express.Router();
 var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
+const authMiddleware = require("../utils/authMiddleware");
 
 router.get("/", (req, res) => {
-  //console.log("Esto es un mensaje para ver en consola");
+  
+  //PAGINACION
+  const page = parseInt(req.query.page) || 1; // Número de página solicitada (por defecto: 1)
+  const pageSize = parseInt(req.query.pageSize) || 10; // Tamaño de la página solicitada (por defecto: 10)
+  const offset = (page - 1) * pageSize; // Calcular el índice de inicio para la paginación
+  
+
   models.docente
-    .findAll({
+    .findAndCountAll({
       attributes: ["id", "nombre","apellido","idMateria","idCarrera"],
       include:[
         {as:'Materia', model:models.materia, attributes: ["id","nombre"]}
-      ]
+      ],
+      limit: pageSize, // Limitar la cantidad de resultados por página
+      offset: offset // Saltar los resultados anteriores a la página actual
     })
     .then(docentes => {
       //Log exitoso cuando se obtienen los docentes
       logsUtils.guardarLog("Consulta exitosa a la lista de docentes");
-      res.send(docentes);
+      res.json({
+        page: page,
+        pageSize: pageSize,
+        totalDocentes: docentes.count,
+        docentes: docentes.rows
+      });
     })
     .catch(error => {
       logsUtils.guardarLog(`Error al consultar los docentes: ${error.message}`);
@@ -24,7 +38,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/",authMiddleware.authenticateToken, (req, res) => {
   models.docente
     .create({ nombre: req.body.nombre, apellido: req.body.apellido , idMateria: req.body.idMateria , idCarrera: req.body.idCarrera })
     .then(docente => {
@@ -71,42 +85,54 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
-  const onSuccess = docente =>
-    docente
-      .update({ nombre: req.body.nombre, apellido: req.body.apellido, idMateria: req.body.idMateria, idCarrera:req.body.idCarrera }, { fields: ["nombre", "apellido", "idMateria", "idCarrera"] })
-      .then(() => res.sendStatus(200))
-      .catch(error => {
-        if (error == "SequelizeUniqueConstraintError: Validation error") {
-          logsUtils.guardarLog(`Error de validacion al actualizar`),
-          res.status(400).send('Bad request: existe otro docente con el mismo nombre')
-        }
-        else {
-          logsUtils.guardarLog(`Error al intentar actualizar la base de datos: ${error}`)
-          console.log(`Error al intentar actualizar la base de datos: ${error}`)
-          res.sendStatus(500)
-        }
-      });
-      findDocente(req.params.id, {
-        onSuccess:() => logsUtils.guardarLog(`Docente actualziado correctamente`),
-        onNotFound: () => {
-          logsUtils.guardarLog(`Docente no encontrada`);
-          res.sendStatus(404)
-        },
-        onError: () => {
-          logsUtils.guardarLog(`Error al buscar al docente`);
-          res.sendStatus(500)
-        }
-  });
+router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
+
+  //Guardo el ID y los datos para la actualizacion
+  const docenteId = req.params.id;
+  const updatedDocente = {
+    nombre: req.body.nombre,
+    apellido: req.body.apellido,
+    idMateria: req.body.idMateria,
+    idCarrera: req.body.idCarrera
+  };
+
+
+  //Busco al docente por ID (Pk=Primary Key)
+  models.docente.findByPk(docenteId)
+    .then(docente => {
+      if (!docente) {
+        logsUtils.guardarLog(`docente no encontrado`);
+        return res.sendStatus(404);
+      }
+
+      //Si encuentro al docente usa el metodo update para actualizar al docente con los datos de updatedDocente
+      return docente
+        .update(updatedDocente, { fields: ["nombre", "apellido", "idMateri", "idCarrera"] })
+        .then(updatedDocente => {
+          logsUtils.guardarLog(`Docente actualizado correctamente`);
+          res.status(200).json(updatedDocente);
+        })
+        .catch(error => {
+          logsUtils.guardarLog(`Error al intentar actualizar la base de datos: ${error}`);
+          console.error(`Error al intentar actualizar la base de datos: ${error}`);
+          res.sendStatus(500);
+        });
+    })
+    .catch(error => {
+      logsUtils.guardarLog(`Error al buscar al alumno: ${error}`);
+      console.error(`Error al buscar al alumno: ${error}`);
+      res.sendStatus(500);
+    });
 });
 
-router.delete("/:id", (req, res) => {
+
+router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
   findDocente(req.params.id,{
     onSuccess: docente => {
       docente
       .destroy()
       .then(() => {
-        logsUtils.guardarLog(`docente eliminado con exito`);
+        logsUtils.guardarLog(`Docente eliminado con exito`);
         res.sendStatus(200)
       })
       .catch(error => {
