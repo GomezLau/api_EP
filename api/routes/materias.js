@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
+const authRoutes = require("../routes/authRoutes");
 
 router.get("/", (req, res) => {
   //console.log("Esto es un mensaje para ver en consola");
@@ -26,6 +27,8 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+
+
   models.materia
     .create({ nombre: req.body.nombre, id_carrera: req.body.id_carrera })
     .then(materia => {

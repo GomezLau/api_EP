@@ -1,2 +1,4 @@
 Aplicar paginacion en alumnos/carreras/docentes/materias
 Utilizar authorization en algun route
+
+El token se guarda en una variable de entorno de postmanAPI ({{authToken}})
