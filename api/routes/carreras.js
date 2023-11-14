@@ -34,7 +34,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/",authMiddleware.authenticateToken, (req, res) => {
+router.post("/", authMiddleware.verifyAdmin, (req, res) => {
   models.carrera
     .create({ nombre: req.body.nombre, años: req.body.años })
     .then(carrera => {
@@ -81,7 +81,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
+router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
   
   //Guardo el ID y los datos para la actualizacion
   const carreraId = req.params.id;
@@ -119,7 +119,7 @@ router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
     });
 });
 
-router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
+router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findCarrera(req.params.id,{
     onSuccess: carrera => {
       carrera

@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
+
 // la funcion toma un mensaje como entrada, agrega la fecha y hora actual del mensaje y los guarda en logs.txt
 //AGREGAR "guardarLog" en cada log que se desea guardar en el archivo.
 

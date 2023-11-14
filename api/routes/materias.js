@@ -38,7 +38,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/",authMiddleware.authenticateToken, (req, res) => {
+router.post("/",authMiddleware.verifyAdmin, (req, res) => {
   models.materia
     .create({ nombre: req.body.nombre, id_carrera: req.body.id_carrera })
     .then(materia => {
@@ -85,7 +85,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
+router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
   //Guardo el ID y los datos para la actualizacion
   const materiaId = req.params.id;
   const updatedMateria = {
@@ -121,7 +121,7 @@ router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
     });
 });
 
-router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
+router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findMateria(req.params.id,{
     onSuccess: materia => {
       materia

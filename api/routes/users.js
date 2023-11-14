@@ -3,6 +3,7 @@ var router = express.Router();
 var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
 const authMiddleware = require("../utils/authMiddleware");
+const bcrypt = require('bcrypt');
 
 router.get("/", (req, res) => {
   console.log("Esto es un mensaje para ver en consola");
@@ -17,9 +18,13 @@ router.get("/", (req, res) => {
     .catch(() => res.sendStatus(500));
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+
+  const saltRounds = 10; // Número de rondas de trabajo
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+  
   models.user
-    .create({ name: req.body.name, password: req.body.password })
+    .create({ name: req.body.name, password: hashedPassword })
     .then(user => {
       logsUtils.guardarLog(`Usuario Registrado con exito`);
       res.status(201).send({ id: user.id })
@@ -64,10 +69,14 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async(req, res) => {
+
+  const saltRounds = 10; // Número de rondas de trabajo
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
   const onSuccess = user =>
   user
-      .update({ name: req.body.name, password:req.body.password }, { fields: ["name", "password"] })
+      .update({ name: req.body.name, password:hashedPassword }, { fields: ["name", "password"] })
       .then(() => res.sendStatus(200))
       .catch(error => {
         if (error == "SequelizeUniqueConstraintError: Validation error") {
@@ -93,7 +102,7 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
+router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findUser(req.params.id,{
     onSuccess: user => {
         user

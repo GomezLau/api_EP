@@ -41,3 +41,21 @@
 2023-11-08T20:30:44.253Z: Post exitoso en la lista de carreras
 2023-11-08T20:31:09.858Z: Post exitoso en la lista de carreras
 2023-11-08T20:36:00.028Z: Post exitoso en la lista de carreras
+2023-11-09T00:07:36.101Z: Consulta exitosa a la lista de alumnos
+2023-11-09T00:07:40.828Z: Lectura exitosa
+2023-11-09T00:07:42.091Z: Lectura exitosa
+2023-11-09T00:07:43.902Z: Lectura exitosa
+2023-11-09T00:07:45.036Z: Lectura exitosa
+2023-11-09T00:07:45.913Z: Lectura exitosa
+2023-11-09T00:07:50.342Z: Lectura exitosa
+2023-11-09T00:07:55.068Z: Lectura exitosa
+2023-11-09T00:07:56.413Z: Lectura exitosa
+2023-11-09T00:07:57.265Z: Lectura exitosa
+2023-11-09T00:08:02.250Z: Lectura exitosa
+2023-11-14T18:28:27.841Z: Usuario consultado con exito
+2023-11-14T19:16:09.584Z: Usuario Registrado con exito
+2023-11-14T19:59:35.246Z: Credenciales de administrador verificadas correctamente
+2023-11-14T20:03:44.946Z: Credenciales de administrador verificadas correctamente
+2023-11-14T20:03:45.048Z: Post exitoso en la lista de alumnos
+2023-11-14T20:03:57.252Z: Consulta exitosa a la lista de alumnos
+2023-11-14T20:04:17.519Z: Consulta exitosa a la lista de alumnos

@@ -38,7 +38,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/",authMiddleware.authenticateToken, (req, res) => {
+router.post("/",authMiddleware.verifyAdmin, (req, res) => {
   models.docente
     .create({ nombre: req.body.nombre, apellido: req.body.apellido , idMateria: req.body.idMateria , idCarrera: req.body.idCarrera })
     .then(docente => {
@@ -85,7 +85,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
+router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
 
   //Guardo el ID y los datos para la actualizacion
   const docenteId = req.params.id;
@@ -126,7 +126,7 @@ router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
 });
 
 
-router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
+router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findDocente(req.params.id,{
     onSuccess: docente => {
       docente
