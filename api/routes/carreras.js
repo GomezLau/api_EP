@@ -4,6 +4,50 @@ var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
 const authMiddleware = require("../utils/authMiddleware");
 
+/**
+ * @swagger
+ * /car:
+ *   get:
+ *     summary: Obtener lista de carreras con paginación
+ *     description: Obtiene una lista de carreras con opciones de paginación.
+ *     tags:
+ *       - Carreras
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         description: Número de página solicitada (por defecto 1)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - name: pageSize
+ *         in: query
+ *         description: Tamaño de la página solicitada (por defecto 10)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de carreras obtenida con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               page: 1
+ *               pageSize: 10
+ *               totalCarreras: 20
+ *               carreras:
+ *                 - id: 1
+ *                   nombre: "NombreCarrera1"
+ *                   años: 4
+ *                   MateriasRelacionadas:
+ *                     - idCarrera: 1
+ *                       nombre: "Materia1"
+ *                   Docentes:
+ *                     - id: 1
+ *                       nombre: "NombreDocente1"
+ *                       apellido: "ApellidoDocente1"
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/", (req, res) => {
   
   //PAGINACION
@@ -49,6 +93,40 @@ router.get("/", (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /car:
+ *   post:
+ *     summary: Crear una nueva carrera
+ *     description: Crea una nueva carrera con la información proporcionada.
+ *     tags:
+ *       - Carreras
+ *     security:
+ *       - jwt: []
+ *     requestBody:
+ *       description: Datos de la nueva carrera
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               años:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Carrera creada con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *       400:
+ *         description: Bad request, carrera duplicada o datos inválidos
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.post("/", authMiddleware.verifyAdmin, (req, res) => {
   models.carrera
     .create({ nombre: req.body.nombre, años: req.body.años })
@@ -79,6 +157,42 @@ const findCarrera = (id, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
+/**
+ * @swagger
+ * /car/{id}:
+ *   get:
+ *     summary: Obtener detalles de una carrera por ID
+ *     description: Obtiene detalles de una carrera específica según su ID.
+ *     tags:
+ *       - Carreras
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID de la carrera a obtener
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Detalles de la carrera obtenidos con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "NombreCarrera1"
+ *               años: 4
+ *               MateriasRelacionadas:
+ *                 - idCarrera: 1
+ *                   nombre: "Materia1"
+ *               Docentes:
+ *                 - id: 1
+ *                   nombre: "NombreDocente1"
+ *                   apellido: "ApellidoDocente1"
+ *       404:
+ *         description: Carrera no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/:id", (req, res) => {
   findCarrera(req.params.id, {
     onSuccess: carrera => {
@@ -96,6 +210,49 @@ router.get("/:id", (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /car/{id}:
+ *   put:
+ *     summary: Actualizar una carrera por ID
+ *     description: Actualiza una carrera específica según su ID.
+ *     tags:
+ *       - Carreras
+ *     security:
+ *       - jwt: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID de la carrera a actualizar
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       description: Datos actualizados de la carrera
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               años:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Carrera actualizada con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "NuevoNombreCarrera"
+ *               años: 5
+ *       404:
+ *         description: Carrera no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
   
   //Guardo el ID y los datos para la actualizacion
@@ -133,6 +290,31 @@ router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /car/{id}:
+ *   delete:
+ *     summary: Eliminar una carrera por ID
+ *     description: Elimina una carrera específica según su ID.
+ *     tags:
+ *       - Carreras
+ *     security:
+ *       - jwt: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID de la carrera a eliminar
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Carrera eliminada con éxito
+ *       404:
+ *         description: Carrera no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findCarrera(req.params.id,{
     onSuccess: carrera => {

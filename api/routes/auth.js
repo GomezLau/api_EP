@@ -8,7 +8,40 @@ const logsUtils = require("../utils/logsUtils");
 require('dotenv').config();
 
 
-
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Iniciar sesión de usuario
+ *     description: Verifica las credenciales del usuario y genera un token de acceso.
+ *     tags:
+ *      - Login
+ *     requestBody:
+ *       description: Datos de inicio de sesión del usuario
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Inicio de sesión exitoso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Token'
+ *             example:
+ *               token: "token_de_acceso"
+ *       401:
+ *         description: Credenciales inválidas
+ *     security:
+ *       - jwt: []
+ */
 router.post("/login", async(req, res) => {
   // Verificar credenciales de usuario, conseguir el usuario de la db
     const { name, password } = req.body;

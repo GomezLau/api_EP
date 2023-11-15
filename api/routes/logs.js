@@ -3,6 +3,40 @@ const router = express.Router();
 const logsUtils = require("../utils/logsUtils");
 var fs = require('fs');
 
+/**
+ * @swagger
+ * /logs:
+ *   get:
+ *     summary: Obtener registros de logs paginados
+ *     description: Retorna registros de logs paginados.
+ *     tags:
+ *       - Logs
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         description: Número de página solicitada (por defecto 1)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - name: pageSize
+ *         in: query
+ *         description: Tamaño de la página solicitada (por defecto 10)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Registros de logs paginados
+ *         content:
+ *           application/json:
+ *             example:
+ *               page: 1
+ *               pageSize: 10
+ *               totalLogs: 100
+ *               logs: ["log1", "log2", ...]
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/", (req, res) => {               
     //Convierte STRING -> INTEGER, sino toma los valores por defecto: Pagina 1 - Tamaño 10 (10 losg por pagina)
     const page = parseInt(req.query.page) || 1;

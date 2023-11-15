@@ -4,6 +4,48 @@ var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
 const authMiddleware = require("../utils/authMiddleware");
 
+/**
+ * @swagger
+ * /al:
+ *   get:
+ *     summary: Obtener lista de alumnos paginada
+ *     tags: [Alumnos]
+ *     description: Devuelve una lista paginada de alumnos.
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         description: Número de página solicitada (por defecto 1)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - name: pageSize
+ *         in: query
+ *         description: Tamaño de la página solicitada (por defecto 10)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de alumnos obtenida con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               page: 1
+ *               pageSize: 10
+ *               totalAlumnos: 50
+ *               alumnos:
+ *                 - id: 1
+ *                   nombre: "Nombre"
+ *                   apellido: "Apellido"
+ *                   edad: 25
+ *                   idCarrera: 1
+ *                   CarreraRelacionada:
+ *                     id: 1
+ *                     nombre: "NombreCarrera"
+ *                 # ... Otros alumnos
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/", (req, res) => {
 
   //PAGINACION
@@ -37,6 +79,44 @@ router.get("/", (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /al:
+ *   post:
+ *     summary: Crear un nuevo alumno
+ *     description: Crea un nuevo alumno con la información proporcionada.
+ *     tags:
+ *       - Alumnos
+ *     security:
+ *       - jwt: []
+ *     requestBody:
+ *       description: Datos del nuevo alumno
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               apellido:
+ *                 type: string
+ *               edad:
+ *                 type: integer
+ *               idCarrera:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Alumno creado con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *       400:
+ *         description: Bad request, alumno duplicado o datos inválidos
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.post("/",authMiddleware.verifyAdmin, (req, res) => {
   models.alumno
     .create({ nombre: req.body.nombre, apellido: req.body.apellido , edad: req.body.edad , idCarrera: req.body.idCarrera })
@@ -57,6 +137,40 @@ router.post("/",authMiddleware.verifyAdmin, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /al/{id}:
+ *   get:
+ *     summary: Obtener un alumno por ID
+ *     description: Obtiene los detalles de un alumno utilizando su ID.
+ *     tags:
+ *       - Alumnos
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID del alumno a buscar
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Alumno encontrado con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "NombreAlumno"
+ *               apellido: "ApellidoAlumno"
+ *               edad: 25
+ *               idCarrera: 1
+ *               CarreraRelacionada:
+ *                 id: 1
+ *                 nombre: "NombreCarrera"
+ *       404:
+ *         description: Alumno no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 const findAlumno = (id, { onSuccess, onNotFound, onError }) => {
   models.alumno
     .findOne({
@@ -68,6 +182,40 @@ const findAlumno = (id, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
+/**
+ * @swagger
+ * /al/{id}:
+ *   get:
+ *     summary: Obtener un alumno por ID
+ *     description: Obtiene los detalles de un alumno utilizando su ID.
+ *     tags:
+ *       - Alumnos
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID del alumno a buscar
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Alumno encontrado con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "NombreAlumno"
+ *               apellido: "ApellidoAlumno"
+ *               edad: 25
+ *               idCarrera: 1
+ *               CarreraRelacionada:
+ *                 id: 1
+ *                 nombre: "NombreCarrera"
+ *       404:
+ *         description: Alumno no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/:id", (req, res) => {
   findAlumno(req.params.id, {
     onSuccess: alumno => {
@@ -85,6 +233,55 @@ router.get("/:id", (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /al/{id}:
+ *   put:
+ *     summary: Actualizar información de un alumno por ID
+ *     description: Actualiza la información de un alumno utilizando su ID.
+ *     tags:
+ *       - Alumnos
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID del alumno a actualizar
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       description: Datos actualizados del alumno
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               apellido:
+ *                 type: string
+ *               edad:
+ *                 type: integer
+ *               idCarrera:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Alumno actualizado con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "NombreActualizado"
+ *               apellido: "ApellidoActualizado"
+ *               edad: 26
+ *               idCarrera: 2
+ *       404:
+ *         description: Alumno no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ *     security:
+ *       - jwt: []
+ */
 router.put("/:id", authMiddleware.verifyAdmin, (req, res) => {
   
   //Guardo el ID y los datos para la actualizacion
@@ -124,6 +321,31 @@ router.put("/:id", authMiddleware.verifyAdmin, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /al/{id}:
+ *   delete:
+ *     summary: Eliminar un alumno por ID
+ *     description: Elimina un alumno utilizando su ID.
+ *     tags:
+ *       - Alumnos
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID del alumno a eliminar
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Alumno eliminado con éxito
+ *       404:
+ *         description: Alumno no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ *     security:
+ *       - jwt: []
+ */
 router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findUser(req.params.id,{
     onSuccess: alumno => {

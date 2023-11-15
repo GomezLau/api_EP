@@ -140,3 +140,16 @@ sql: SELECT count(`carrera`.`id`) AS `count` FROM `carreras` AS `carrera` LEFT O
 2023-11-15T00:35:43.083Z: Consulta exitosa a la lista de materias
 2023-11-15T00:35:49.922Z: Consulta exitosa a la lista de carreras
 2023-11-15T00:36:11.785Z: Consulta exitosa a la lista de alumnos
+2023-11-15T02:43:25.183Z: Consulta exitosa a la lista de alumnos
+2023-11-15T02:43:30.148Z: Consulta exitosa a la lista de alumnos
+2023-11-15T02:49:44.942Z: Login succesfull
+2023-11-15T02:58:37.734Z: Login succesfull
+2023-11-15T03:01:35.346Z: Login succesfull
+2023-11-15T03:10:41.597Z: Login succesfull
+2023-11-15T03:11:09.131Z: Consulta exitosa a la lista de alumnos
+2023-11-15T03:12:10.541Z: Login succesfull
+2023-11-15T03:12:44.488Z: Credenciales de administrador verificadas correctamente
+2023-11-15T03:12:44.603Z: Post exitoso en la lista de alumnos
+2023-11-15T04:33:25.556Z: Consulta exitosa a la lista de alumnos
+2023-11-15T04:35:31.988Z: Consulta exitosa a la lista de carreras
+2023-11-15T04:40:49.419Z: Lectura exitosa

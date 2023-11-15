@@ -4,6 +4,40 @@ var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
 const authMiddleware = require("../utils/authMiddleware");
 
+/**
+ * @swagger
+ * /mat:
+ *   get:
+ *     summary: Obtener lista de materias paginadas
+ *     description: Retorna una lista paginada de materias.
+ *     tags:
+ *       - Materias
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         description: Número de página solicitada (por defecto 1)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - name: pageSize
+ *         in: query
+ *         description: Tamaño de la página solicitada (por defecto 10)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de materias paginadas
+ *         content:
+ *           application/json:
+ *             example:
+ *               page: 1
+ *               pageSize: 10
+ *               totalMaterias: 100
+ *               materias: [{ id: 1, nombre: "Materia1", idCarrera: 1, idDocente: 1, Carrera: { id: 1, nombre: "Carrera1" }, Docente: { id: 1, nombre: "Docente1", apellido: "Apellido1" } }, ...]
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/", (req, res) => {
   
   //PAGINACION
@@ -39,6 +73,42 @@ router.get("/", (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /mat:
+ *   post:
+ *     summary: Crear una nueva materia
+ *     description: Crea una nueva materia con la información proporcionada.
+ *     tags:
+ *       - Materias
+ *     security:
+ *       - jwt: []
+ *     requestBody:
+ *       description: Datos de la materia a crear
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               idCarrera:
+ *                 type: integer
+ *               idDocente:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Materia creada con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *       400:
+ *         description: Bad request, materia duplicada o datos inválidos
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.post("/",authMiddleware.verifyAdmin, (req, res) => {
   models.materia
     .create({ nombre: req.body.nombre, idCarrera: req.body.idCarrera, idDocente: req.body.idDocente })
@@ -69,6 +139,36 @@ const findMateria = (id, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
+/**
+ * @swagger
+ * /mat/{id}:
+ *   get:
+ *     summary: Obtener información de una materia por su ID
+ *     description: Obtiene información detallada de una materia utilizando su ID.
+ *     tags:
+ *       - Materias
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la materia a obtener
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Materia encontrada con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "Nombre de la materia"
+ *               idCarrera: 2
+ *               idDocente: 3
+ *       404:
+ *         description: Materia no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/:id", (req, res) => {
   findMateria(req.params.id, {
     onSuccess: materia => {
@@ -86,6 +186,52 @@ router.get("/:id", (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /mat/{id}:
+ *   put:
+ *     summary: Actualizar información de una materia por su ID
+ *     description: Actualiza la información de una materia utilizando su ID.
+ *     tags:
+ *       - Materias
+ *     security:
+ *      - jwt: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la materia a actualizar
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *         description: Nuevos datos de la materia
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 nombre:
+ *                   type: string
+ *                 idCarrera:
+ *                   type: integer
+ *                 idDocente:
+ *                   type: integer
+ *     responses:
+ *       200:
+ *         description: Materia actualizada con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "Nuevo nombre de la materia"
+ *               idCarrera: 2
+ *               idDocente: 3
+ *       404:
+ *         description: Materia no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
   //Guardo el ID y los datos para la actualizacion
   const materiaId = req.params.id;
@@ -123,6 +269,31 @@ router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /mat/{id}:
+ *   delete:
+ *     summary: Eliminar una materia por su ID
+ *     description: Elimina una materia utilizando su ID.
+ *     tags:
+ *       - Materias
+ *     security:
+ *       - jwt: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la materia a eliminar
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Materia eliminada con éxito
+ *       404:
+ *         description: Materia no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findMateria(req.params.id,{
     onSuccess: materia => {
