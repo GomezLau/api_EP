@@ -34,7 +34,7 @@ require('dotenv').config();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Token'
+ *               $ref: '#/components/securitySchemes/jwt'
  *             example:
  *               token: "token_de_acceso"
  *       401:

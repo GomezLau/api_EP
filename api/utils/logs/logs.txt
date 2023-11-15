@@ -153,3 +153,14 @@ sql: SELECT count(`carrera`.`id`) AS `count` FROM `carreras` AS `carrera` LEFT O
 2023-11-15T04:33:25.556Z: Consulta exitosa a la lista de alumnos
 2023-11-15T04:35:31.988Z: Consulta exitosa a la lista de carreras
 2023-11-15T04:40:49.419Z: Lectura exitosa
+2023-11-15T04:51:24.191Z: Consulta exitosa a la lista de alumnos
+2023-11-15T04:51:31.086Z: Consulta exitosa a la lista de carreras
+2023-11-15T04:51:37.460Z: Consulta exitosa a la lista de docentes
+2023-11-15T04:51:38.406Z: Consulta exitosa a la lista de docentes
+2023-11-15T04:51:45.206Z: Consulta exitosa a la lista de materias
+2023-11-15T04:51:54.501Z: Usuario consultado con exito
+2023-11-15T04:52:59.404Z: Login succesfull
+2023-11-15T20:26:15.062Z: Error al consultar las alumnos: connect ECONNREFUSED ::1:3306
+2023-11-15T20:26:35.543Z: Consulta exitosa a la lista de alumnos
+2023-11-15T20:33:44.644Z: Login succesfull
+2023-11-15T20:34:09.928Z: Consulta exitosa a la lista de alumnos

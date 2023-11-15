@@ -50,7 +50,7 @@ const swaggerSpec = {
     },
     servers: [
       {
-        url: "http://localhost:3001"
+        url: "http://localhost:3001" // Ubicacion de la API
       }
     ],
     security: [
