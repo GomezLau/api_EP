@@ -3,7 +3,31 @@ var router = express.Router();
 var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
 const authMiddleware = require("../utils/authMiddleware");
+const bcrypt = require('bcrypt');
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Obtener la lista de usuarios
+ *     description: Obtiene la lista de todos los usuarios.
+ *     tags:
+ *       - Usuarios
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios obtenida con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               - id: 1
+ *                 name: usuario1
+ *                 password: contraseña1
+ *               - id: 2
+ *                 name: usuario2
+ *                 password: contraseña2
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/", (req, res) => {
   console.log("Esto es un mensaje para ver en consola");
   models.user
@@ -17,9 +41,45 @@ router.get("/", (req, res) => {
     .catch(() => res.sendStatus(500));
 });
 
-router.post("/", (req, res) => {
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Crear un nuevo usuario
+ *     description: Crea un nuevo usuario con la información proporcionada.
+ *     tags:
+ *       - Usuarios
+ *     requestBody:
+ *       description: Datos del usuario a crear
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Usuario creado con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *       400:
+ *         description: Bad request, usuario duplicado o datos inválidos
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.post("/", async (req, res) => {
+
+  const saltRounds = 10; // Número de rondas de trabajo
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+  
   models.user
-    .create({ name: req.body.name, password: req.body.password })
+    .create({ name: req.body.name, password: hashedPassword })
     .then(user => {
       logsUtils.guardarLog(`Usuario Registrado con exito`);
       res.status(201).send({ id: user.id })
@@ -47,6 +107,34 @@ const findUser = (id, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Obtener información de un usuario por ID
+ *     description: Obtiene la información de un usuario específico basado en su ID.
+ *     tags:
+ *       - Usuarios
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del usuario a obtener
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Usuario encontrado con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: usuarioEjemplo
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/:id", (req, res) => {
   findUser(req.params.id, {
     onSuccess: user => {
@@ -64,10 +152,52 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     summary: Actualizar información de un usuario por ID
+ *     description: Actualiza la información de un usuario específico basado en su ID.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *      - jwt: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del usuario a actualizar
+ *         schema:
+ *           type: integer
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         description: Datos del usuario a actualizar
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *             password:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Usuario actualizado con éxito
+ *       400:
+ *         description: Bad request, usuario duplicado o datos inválidos
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put("/:id", async(req, res) => {
+
+  const saltRounds = 10; // Número de rondas de trabajo
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
   const onSuccess = user =>
   user
-      .update({ name: req.body.name, password:req.body.password }, { fields: ["name", "password"] })
+      .update({ name: req.body.name, password:hashedPassword }, { fields: ["name", "password"] })
       .then(() => res.sendStatus(200))
       .catch(error => {
         if (error == "SequelizeUniqueConstraintError: Validation error") {
@@ -93,7 +223,32 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Eliminar un usuario por ID
+ *     description: Elimina un usuario específico basado en su ID.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *      - jwt: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del usuario a eliminar
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Usuario eliminado con éxito
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findUser(req.params.id,{
     onSuccess: user => {
         user

@@ -1,52 +1,27 @@
 const jwt = require("jsonwebtoken");
-var models = require("../models");
+const logsUtils = require("../utils/logsUtils");
+require('dotenv').config();
 
-const secretKey = "12345";
+function verifyAdmin(req, res, next){
+  const decodedToken = jwt.verify(req.headers.authorization, process.env.SECRET)
 
 
-function generateToken(req,user) {
-  
-  return jwt.sign({ user }, secretKey, { expiresIn: '1h' }); 
-}
-
-function authenticateToken(req, res, next) {
-  
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.sendStatus(401); // No autorizado
+  //Verifica si el id dentro del token es el del admin
+  //Proximamente cambiarlo por un rol o algo parecido. Ej. .rol == admin
+  if (decodedToken.id == 5){
+      console.log("Credenciales de administrador verificadas correctamente");
+      logsUtils.guardarLog(`Credenciales de administrador verificadas correctamente`);
+      next();
+  } else {
+      console.log("Credenciales invalidas");
+      logsUtils.guardarLog(`Error en las credenciales`);
+      return res.status(401); 
   }
-
-  jwt.verify(token, secretKey, (err, user) => {
-    if (err) {
-      return res.sendStatus(403); // Forbidden
-    }
-    req.user = user;
-    next(); // Continúa con la siguiente función
-  });
-}
-
-// Autenticar Credenciales -> "admin" "passw"
-async function authenticateCredentials(nombre, password) {
-  if(nombre== undefined || password== undefined){
-    return false
-  }
-  const user = await models.user.findOne({
-    where: {
-      name: nombre,
-      password: password
-    },
-  });
-  console.log("authenticateCredentials")
-  return user !== null;
-
 }
 
 
 
 
 module.exports = {
-  generateToken,
-  authenticateToken,
-  authenticateCredentials
+  verifyAdmin
 };

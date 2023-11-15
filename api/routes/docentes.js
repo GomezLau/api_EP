@@ -4,6 +4,52 @@ var models = require("../models");
 const logsUtils = require("../utils/logsUtils");
 const authMiddleware = require("../utils/authMiddleware");
 
+/**
+ * @swagger
+ * /doc:
+ *   get:
+ *     summary: Obtener lista de docentes
+ *     description: Obtiene una lista paginada de docentes.
+ *     tags:
+ *       - Docentes
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         description: Número de página solicitada
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - name: pageSize
+ *         in: query
+ *         description: Tamaño de la página solicitada
+ *         required: false
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de docentes obtenida con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               page: 1
+ *               pageSize: 10
+ *               totalDocentes: 20
+ *               docentes:
+ *                 - id: 1
+ *                   nombre: "NombreDocente1"
+ *                   apellido: "ApellidoDocente1"
+ *                   MateriasRelacionadas:
+ *                     - idDocente: 1
+ *                       nombre: "Materia1"
+ *                 - id: 2
+ *                   nombre: "NombreDocente2"
+ *                   apellido: "ApellidoDocente2"
+ *                   MateriasRelacionadas:
+ *                     - idDocente: 2
+ *                       nombre: "Materia2"
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/", (req, res) => {
   
   //PAGINACION
@@ -14,9 +60,13 @@ router.get("/", (req, res) => {
 
   models.docente
     .findAndCountAll({
-      attributes: ["id", "nombre","apellido","idMateria","idCarrera"],
+      attributes: ["id", "nombre","apellido"],
       include:[
-        {as:'Materia', model:models.materia, attributes: ["id","nombre"]}
+        {
+          as:'MateriasRelacionadas', 
+          model:models.materia, 
+          attributes: ["idDocente","nombre"]
+        }
       ],
       limit: pageSize, // Limitar la cantidad de resultados por página
       offset: offset // Saltar los resultados anteriores a la página actual
@@ -38,9 +88,43 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/",authMiddleware.authenticateToken, (req, res) => {
+/**
+ * @swagger
+ * /doc:
+ *   post:
+ *     summary: Crear un nuevo docente
+ *     description: Crea un nuevo docente con la información proporcionada.
+ *     tags:
+ *       - Docentes
+ *     security:
+ *       - jwt: []
+ *     requestBody:
+ *       description: Datos del docente a crear
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               apellido:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Docente creado con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *       400:
+ *         description: Bad request, docente duplicado o datos inválidos
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.post("/",authMiddleware.verifyAdmin, (req, res) => {
   models.docente
-    .create({ nombre: req.body.nombre, apellido: req.body.apellido , idMateria: req.body.idMateria , idCarrera: req.body.idCarrera })
+    .create({ nombre: req.body.nombre, apellido: req.body.apellido  })
     .then(docente => {
       logsUtils.guardarLog("Post exitoso en la lista de docentes");
       res.status(201).send({ id: docente.id })
@@ -61,13 +145,45 @@ router.post("/",authMiddleware.authenticateToken, (req, res) => {
 const findDocente = (id, { onSuccess, onNotFound, onError }) => {
   models.docente
     .findOne({
-      attributes: ["id", "nombre","apellido","idMateria","idCarrera"],
+      attributes: ["id", "nombre","apellido"],
       where: { id }
     })
     .then(docente => (docente ? onSuccess(docente) : onNotFound()))
     .catch(() => onError());
 };
 
+/**
+ * @swagger
+ * /doc/{id}:
+ *   get:
+ *     summary: Obtener un docente por ID
+ *     description: Obtiene información detallada de un docente según su ID.
+ *     tags:
+ *       - Docentes
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID del docente a obtener
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Docente obtenido con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "NombreDocente"
+ *               apellido: "ApellidoDocente"
+ *               MateriasRelacionadas:
+ *                 - idDocente: 1
+ *                   nombre: "Materia1"
+ *       404:
+ *         description: Docente no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get("/:id", (req, res) => {
   findDocente(req.params.id, {
     onSuccess: docente => {
@@ -85,15 +201,56 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
+/**
+ * @swagger
+ * /doc/{id}:
+ *   put:
+ *     summary: Actualizar un docente por ID
+ *     description: Actualiza la información de un docente según su ID.
+ *     tags:
+ *       - Docentes
+ *     security:
+ *       - jwt: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID del docente a actualizar
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       description: Nuevos datos del docente
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               apellido:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Docente actualizado con éxito
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               nombre: "NuevoNombre"
+ *               apellido: "NuevoApellido"
+ *       404:
+ *         description: Docente no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
 
   //Guardo el ID y los datos para la actualizacion
   const docenteId = req.params.id;
   const updatedDocente = {
     nombre: req.body.nombre,
     apellido: req.body.apellido,
-    idMateria: req.body.idMateria,
-    idCarrera: req.body.idCarrera
   };
 
 
@@ -107,7 +264,7 @@ router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
 
       //Si encuentro al docente usa el metodo update para actualizar al docente con los datos de updatedDocente
       return docente
-        .update(updatedDocente, { fields: ["nombre", "apellido", "idMateri", "idCarrera"] })
+        .update(updatedDocente, { fields: ["nombre", "apellido"] })
         .then(updatedDocente => {
           logsUtils.guardarLog(`Docente actualizado correctamente`);
           res.status(200).json(updatedDocente);
@@ -119,14 +276,38 @@ router.put("/:id",authMiddleware.authenticateToken, (req, res) => {
         });
     })
     .catch(error => {
-      logsUtils.guardarLog(`Error al buscar al alumno: ${error}`);
-      console.error(`Error al buscar al alumno: ${error}`);
+      logsUtils.guardarLog(`Error al buscar al docente: ${error}`);
+      console.error(`Error al buscar al docente: ${error}`);
       res.sendStatus(500);
     });
 });
 
-
-router.delete("/:id",authMiddleware.authenticateToken, (req, res) => {
+/**
+ * @swagger
+ * /doc/{id}:
+ *   delete:
+ *     summary: Eliminar un docente por ID
+ *     description: Elimina a un docente según su ID.
+ *     tags:
+ *       - Docentes
+ *     security:
+ *       - jwt: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID del docente a eliminar
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Docente eliminado con éxito
+ *       404:
+ *         description: Docente no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete("/:id",authMiddleware.verifyAdmin, (req, res) => {
   findDocente(req.params.id,{
     onSuccess: docente => {
       docente

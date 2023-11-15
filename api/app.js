@@ -7,9 +7,14 @@ var carrerasRouter = require('./routes/carreras');
 var alumnosRouter = require('./routes/alumnos');
 var docentesRouter = require('./routes/docentes');
 var materiasRouter = require('./routes/materias');
-var authRoutes = require('./routes/authRoutes');
 var usersRouter = require('./routes/users');
 var logsRouter = require('./routes/logs');
+
+var authRouter = require('./routes/auth');
+
+// swagger
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 
 var app = express();
 
@@ -29,9 +34,47 @@ app.use('/car', carrerasRouter);
 app.use('/mat', materiasRouter);
 app.use('/al', alumnosRouter);
 app.use('/doc', docentesRouter);
-app.use('/authRoutes', authRoutes);
+
 app.use('/users', usersRouter);
 app.use('/logs', logsRouter);
+app.use('/auth', authRouter);
+
+
+// swagger
+const swaggerSpec = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "unahur API",
+      version: "1.0.0"
+    },
+    servers: [
+      {
+        url: "http://localhost:3001"
+      }
+    ],
+    security: [
+      {
+        jwt: [], // Definición de seguridad JWT
+      },
+    ],
+    components: {
+      securitySchemes: {
+        jwt: {
+          type: "apiKey",
+          name: "Authorization",
+          in: "header",
+        },
+      },
+    },
+  },
+  apis: [`${path.join(__dirname, "./routes/*")}`],
+};
+
+// swagger mdlwr
+app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerSpec)))
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -47,6 +90,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 
 
