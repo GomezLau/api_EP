@@ -54,7 +54,7 @@ router.post("/login", async(req, res) => {
 
     if(!user){
         return res.status(401).json({
-            error: 'invalid user'
+            error: 'invalid user or password'
         });
     }
 
@@ -66,7 +66,7 @@ router.post("/login", async(req, res) => {
     */
     if(!passwordCorrect){
         return res.status(401).json({
-            error: 'invalid password'
+            error: 'invalid user or password'
         });
     }
 

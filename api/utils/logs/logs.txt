@@ -164,3 +164,4 @@ sql: SELECT count(`carrera`.`id`) AS `count` FROM `carreras` AS `carrera` LEFT O
 2023-11-15T20:26:35.543Z: Consulta exitosa a la lista de alumnos
 2023-11-15T20:33:44.644Z: Login succesfull
 2023-11-15T20:34:09.928Z: Consulta exitosa a la lista de alumnos
+2023-11-15T20:39:14.943Z: Login succesfull
