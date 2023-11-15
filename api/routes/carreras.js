@@ -14,6 +14,21 @@ router.get("/", (req, res) => {
   models.carrera
     .findAndCountAll({
       attributes: ["id", "nombre", "años"],
+      include:[
+        {
+          as:'MateriasRelacionadas', 
+          model:models.materia, 
+          attributes: ["idCarrera","nombre"],
+          foreignKey: 'idCarrera'
+        },
+        {
+          as:'Docentes',
+          model:models.docente,
+          attributes: ["id","nombre","apellido"],
+          //foreignKey:'idCarrera',
+          //otherKey:'idDocente'
+        }
+      ],
       limit: pageSize, // Limitar la cantidad de resultados por página
       offset: offset // Saltar los resultados anteriores a la página actual     
     })
@@ -87,7 +102,6 @@ router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
   const carreraId = req.params.id;
   const updatedCarrera = {
     nombre: req.body.nombre,
-    //materias: req.body.materias,
     años: req.body.años,
   };
 

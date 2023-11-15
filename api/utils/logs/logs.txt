@@ -59,3 +59,84 @@
 2023-11-14T20:03:45.048Z: Post exitoso en la lista de alumnos
 2023-11-14T20:03:57.252Z: Consulta exitosa a la lista de alumnos
 2023-11-14T20:04:17.519Z: Consulta exitosa a la lista de alumnos
+2023-11-14T22:56:03.771Z: Consulta exitosa a la lista de alumnos
+2023-11-14T22:56:13.010Z: Consulta exitosa a la lista de materias
+2023-11-14T22:58:47.224Z: Consulta exitosa a la lista de materias
+2023-11-14T22:58:52.619Z: Error al consultar las carreras: materia is associated to carrera using an alias. You've included an alias (Materias-relacionadas), but it does not match the alias(es) defined in your association (Materias-Relacionadas).
+2023-11-14T22:59:44.457Z: Consulta exitosa a la lista de carreras
+2023-11-14T23:50:03.735Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:50:03.823Z: Post exitoso en la lista de carreras
+2023-11-14T23:50:26.492Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:50:26.608Z: Post exitoso en la lista de carreras
+2023-11-14T23:50:35.019Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:50:35.083Z: Post exitoso en la lista de carreras
+2023-11-14T23:50:44.577Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:50:44.659Z: Post exitoso en la lista de carreras
+2023-11-14T23:50:59.436Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:50:59.503Z: Carrera actualizada correctamente
+2023-11-14T23:51:18.560Z: Consulta exitosa a la lista de carreras
+2023-11-14T23:57:01.362Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:57:01.458Z: Post exitoso en la lista de docentes
+2023-11-14T23:57:14.460Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:57:14.534Z: Post exitoso en la lista de docentes
+2023-11-14T23:57:23.853Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:57:23.918Z: Post exitoso en la lista de docentes
+2023-11-14T23:57:29.794Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:57:29.860Z: Post exitoso en la lista de docentes
+2023-11-14T23:57:33.246Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:57:33.343Z: Post exitoso en la lista de docentes
+2023-11-14T23:57:51.515Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:57:51.586Z: Post exitoso en la lista de docentes
+2023-11-14T23:58:00.555Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:58:00.629Z: Post exitoso en la lista de docentes
+2023-11-14T23:59:11.371Z: Credenciales de administrador verificadas correctamente
+2023-11-14T23:59:11.373Z: Error en POST, error al insertar: notNull Violation: materia.idDocente cannot be null
+2023-11-15T00:00:47.642Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:00:47.643Z: Error en POST, error al insertar: notNull Violation: materia.idDocente cannot be null
+2023-11-15T00:01:20.556Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:01:20.558Z: Error en POST, error al insertar: notNull Violation: materia.idDocente cannot be null
+2023-11-15T00:02:36.069Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:02:36.071Z: Error en POST, error al insertar: notNull Violation: materia.idDocente cannot be null
+2023-11-15T00:03:14.104Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:03:14.261Z: Post exitoso en la lista de materias
+2023-11-15T00:03:37.195Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:03:37.261Z: Post exitoso en la lista de materias
+2023-11-15T00:04:58.924Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:04:59.085Z: Post exitoso en la lista de materias
+2023-11-15T00:05:39.256Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:05:39.344Z: Post exitoso en la lista de materias
+2023-11-15T00:05:48.856Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:05:48.998Z: Post exitoso en la lista de materias
+2023-11-15T00:06:23.409Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:06:23.490Z: Post exitoso en la lista de materias
+2023-11-15T00:06:42.205Z: Credenciales de administrador verificadas correctamente
+2023-11-15T00:06:42.274Z: Post exitoso en la lista de materias
+2023-11-15T00:06:48.432Z: Error al consultar las materias: carrera is not associated to materia!
+2023-11-15T00:08:47.856Z: Error al consultar las materias: carrera is associated to materia using an alias. You've included an alias (Carrera-relacionada), but it does not match the alias(es) defined in your association (Carrera).
+2023-11-15T00:09:37.916Z: Error al consultar las materias: carrera is associated to materia using an alias. You've included an alias (Carrera-relacionada), but it does not match the alias(es) defined in your association (Carrera).
+2023-11-15T00:10:16.238Z: Error al consultar las materias: carrera is associated to materia using an alias. You've included an alias (Carrera-relacionada), but it does not match the alias(es) defined in your association (MateriasRelacionadas).
+2023-11-15T00:11:24.786Z: Error al consultar las materias: carrera is associated to materia using an alias. You've included an alias (Carrera-relacionada), but it does not match the alias(es) defined in your association (Carreras).
+2023-11-15T00:14:05.937Z: Error al consultar las materias: carrera is associated to materia using an alias. You've included an alias (Carrera-relacionada), but it does not match the alias(es) defined in your association (Carreras).
+2023-11-15T00:17:03.819Z: Consulta exitosa a la lista de materias
+2023-11-15T00:17:25.322Z: Consulta exitosa a la lista de carreras
+2023-11-15T00:17:42.360Z: Consulta exitosa a la lista de alumnos
+2023-11-15T00:19:08.879Z: Consulta exitosa a la lista de docentes
+2023-11-15T00:20:50.186Z: Consulta exitosa a la lista de docentes
+2023-11-15T00:20:54.457Z: Error al consultar las materias: docente is not associated to materia!
+2023-11-15T00:21:37.737Z: Consulta exitosa a la lista de materias
+2023-11-15T00:26:02.090Z: Consulta exitosa a la lista de materias
+2023-11-15T00:26:05.937Z: Error al consultar las carreras: docente is not associated to carrera!
+2023-11-15T00:27:34.857Z: Error al consultar las carreras: (conn=332, no: 1146, SQLState: 42S02) Table 'unahur.materias' doesn't exist
+sql: SELECT count(`carrera`.`id`) AS `count` FROM `carreras` AS `carrera` LEFT OUTER JOIN `materia` AS `MateriasRelacionadas` ON `carrera`.`id` = `MateriasRelacionadas`.`idCarrera` LEFT OUTER JOIN ( `materias` AS `Docentes->materias` INNER JOIN `docentes` AS `Docentes` ON `Docentes`.`id` = `Docentes->materias`.`idDocente`) ON `carrera`.`id` = `Docentes->materias`.`idCarrera`; - parameters:[]
+2023-11-15T00:28:11.864Z: Consulta exitosa a la lista de carreras
+2023-11-15T00:28:45.648Z: Consulta exitosa a la lista de carreras
+2023-11-15T00:30:35.402Z: Error al consultar los docentes: docente is not associated to docente!
+2023-11-15T00:31:29.489Z: Error al consultar los docentes: docente is not associated to docente!
+2023-11-15T00:32:01.305Z: Error al consultar los docentes: Include unexpected. Element has to be either a Model, an Association or an object.
+2023-11-15T00:33:10.447Z: Error al consultar los docentes: Include unexpected. Element has to be either a Model, an Association or an object.
+2023-11-15T00:33:26.699Z: Consulta exitosa a la lista de docentes
+2023-11-15T00:34:07.643Z: Consulta exitosa a la lista de docentes
+2023-11-15T00:35:32.743Z: Consulta exitosa a la lista de docentes
+2023-11-15T00:35:43.083Z: Consulta exitosa a la lista de materias
+2023-11-15T00:35:49.922Z: Consulta exitosa a la lista de carreras
+2023-11-15T00:36:11.785Z: Consulta exitosa a la lista de alumnos

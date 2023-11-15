@@ -14,12 +14,6 @@ module.exports = {
       apellido: {
         type: Sequelize.STRING
       },
-      idMateria: {
-        type: Sequelize.INTEGER
-      },
-      idCarrera: {
-        type: Sequelize.INTEGER
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

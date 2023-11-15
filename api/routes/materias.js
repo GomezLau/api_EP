@@ -13,9 +13,10 @@ router.get("/", (req, res) => {
   
   models.materia
     .findAndCountAll({
-      attributes: ["id", "nombre","id_carrera"],
+      attributes: ["id", "nombre","idCarrera", "idDocente"],
       include:[
-        {as:'Carrera-relacionada', model:models.carrera, attributes: ["id","nombre"]},
+        {as:'Carrera', model:models.carrera, attributes: ["id","nombre"]},
+        {as:'Docente', model:models.docente, attributes: ["id","nombre","apellido"]}
       ],
       limit: pageSize, // Limitar la cantidad de resultados por página
       offset: offset // Saltar los resultados anteriores a la página actual
@@ -40,7 +41,7 @@ router.get("/", (req, res) => {
 
 router.post("/",authMiddleware.verifyAdmin, (req, res) => {
   models.materia
-    .create({ nombre: req.body.nombre, id_carrera: req.body.id_carrera })
+    .create({ nombre: req.body.nombre, idCarrera: req.body.idCarrera, idDocente: req.body.idDocente })
     .then(materia => {
       logsUtils.guardarLog("Post exitoso en la lista de materias");
       res.status(201).send({ id: materia.id })
@@ -61,7 +62,7 @@ router.post("/",authMiddleware.verifyAdmin, (req, res) => {
 const findMateria = (id, { onSuccess, onNotFound, onError }) => {
   models.materia
     .findOne({
-      attributes: ["id", "nombre", "id_carrera"],
+      attributes: ["id", "nombre", "idCarrera", "idDocente"],
       where: { id }
     })
     .then(materia => (materia ? onSuccess(materia) : onNotFound()))
@@ -90,7 +91,8 @@ router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
   const materiaId = req.params.id;
   const updatedMateria = {
     nombre: req.body.nombre,
-    id_carrera: req.body.id_carrera
+    idCarrera: req.body.idCarrera,
+    idDocente: req.body.idDocente
   };
 
   //Busco la materia por ID (Pk=Primary Key)
@@ -103,7 +105,7 @@ router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
 
       //Si encuentro la materia usa el metodo update para actualizar la materia con los datos de updatedMateria
       return materia
-        .update(updatedMateria, { fields: ["nombre", "id_carrera"] })
+        .update(updatedMateria, { fields: ["nombre", "idCarrera", "idDocente"] })
         .then(updatedMateria => {
           logsUtils.guardarLog(`Materia actualizada correctamente`);
           res.status(200).json(updatedMateria);

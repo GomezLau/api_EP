@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 //const User = require("../models/user");
 const bcrypt = require('bcrypt');
 var models = require("../models");
+const logsUtils = require("../utils/logsUtils");
 require('dotenv').config();
 
 
@@ -44,6 +45,8 @@ router.post("/login", async(req, res) => {
     const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: '1h' })
 
     const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    logsUtils.guardarLog("Login succesfull")
 
     res.send({
         id: user.id,

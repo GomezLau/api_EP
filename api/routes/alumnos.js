@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
     .findAndCountAll({
       attributes: ["id", "nombre","apellido","edad","idCarrera"],
       include:[
-        {as:'Carrera-Relacionada', model:models.carrera, attributes: ["id","nombre"]}
+        {as:'CarreraRelacionada', model:models.carrera, attributes: ["id","nombre"]}
       ],
       limit: pageSize, // Limitar la cantidad de resultados por página
       offset: offset // Saltar los resultados anteriores a la página actual
@@ -61,7 +61,7 @@ const findAlumno = (id, { onSuccess, onNotFound, onError }) => {
   models.alumno
     .findOne({
       attributes: ["id", "nombre","apellido","edad","idCarrera"],
-      include:[{as:'Carrera-Relacionada', model:models.carrera, attributes: ["id","nombre"]}],
+      include:[{as:'CarreraRelacionada', model:models.carrera, attributes: ["id","nombre"]}],
       where: { id }
     })
     .then(alumno => (alumno ? onSuccess(alumno) : onNotFound()))

@@ -14,9 +14,13 @@ router.get("/", (req, res) => {
 
   models.docente
     .findAndCountAll({
-      attributes: ["id", "nombre","apellido","idMateria","idCarrera"],
+      attributes: ["id", "nombre","apellido"],
       include:[
-        {as:'Materia', model:models.materia, attributes: ["id","nombre"]}
+        {
+          as:'MateriasRelacionadas', 
+          model:models.materia, 
+          attributes: ["idDocente","nombre"]
+        }
       ],
       limit: pageSize, // Limitar la cantidad de resultados por página
       offset: offset // Saltar los resultados anteriores a la página actual
@@ -40,7 +44,7 @@ router.get("/", (req, res) => {
 
 router.post("/",authMiddleware.verifyAdmin, (req, res) => {
   models.docente
-    .create({ nombre: req.body.nombre, apellido: req.body.apellido , idMateria: req.body.idMateria , idCarrera: req.body.idCarrera })
+    .create({ nombre: req.body.nombre, apellido: req.body.apellido  })
     .then(docente => {
       logsUtils.guardarLog("Post exitoso en la lista de docentes");
       res.status(201).send({ id: docente.id })
@@ -61,7 +65,7 @@ router.post("/",authMiddleware.verifyAdmin, (req, res) => {
 const findDocente = (id, { onSuccess, onNotFound, onError }) => {
   models.docente
     .findOne({
-      attributes: ["id", "nombre","apellido","idMateria","idCarrera"],
+      attributes: ["id", "nombre","apellido"],
       where: { id }
     })
     .then(docente => (docente ? onSuccess(docente) : onNotFound()))
@@ -92,8 +96,6 @@ router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
   const updatedDocente = {
     nombre: req.body.nombre,
     apellido: req.body.apellido,
-    idMateria: req.body.idMateria,
-    idCarrera: req.body.idCarrera
   };
 
 
@@ -107,7 +109,7 @@ router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
 
       //Si encuentro al docente usa el metodo update para actualizar al docente con los datos de updatedDocente
       return docente
-        .update(updatedDocente, { fields: ["nombre", "apellido", "idMateri", "idCarrera"] })
+        .update(updatedDocente, { fields: ["nombre", "apellido"] })
         .then(updatedDocente => {
           logsUtils.guardarLog(`Docente actualizado correctamente`);
           res.status(200).json(updatedDocente);
@@ -119,8 +121,8 @@ router.put("/:id",authMiddleware.verifyAdmin, (req, res) => {
         });
     })
     .catch(error => {
-      logsUtils.guardarLog(`Error al buscar al alumno: ${error}`);
-      console.error(`Error al buscar al alumno: ${error}`);
+      logsUtils.guardarLog(`Error al buscar al docente: ${error}`);
+      console.error(`Error al buscar al docente: ${error}`);
       res.sendStatus(500);
     });
 });
